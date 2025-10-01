@@ -51,3 +51,14 @@ inline std::error_code make_error_code(file_errc e)
 namespace std {
     template<> struct is_error_code_enum<file_errc> : true_type {};
 }
+
+
+int main()
+{
+    std::error_code ec = file_errc::open_failed;
+    if (ec == std::errc::no_such_file_or_directory) {
+        // portable check
+    }
+
+    throw std::system_error(ec, "read_file"); 
+}
