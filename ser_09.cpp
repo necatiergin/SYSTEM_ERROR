@@ -1,3 +1,5 @@
+// throwing std::system_error
+
 #include <system_error>
 
 int main()
