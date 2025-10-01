@@ -1,3 +1,5 @@
+// typical error_code usage
+
 #include <filesystem>
  
 int main()
