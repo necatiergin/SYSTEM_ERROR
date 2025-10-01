@@ -1,3 +1,5 @@
+// value or error
+
 #include <system_error>
 #include <string>
 
