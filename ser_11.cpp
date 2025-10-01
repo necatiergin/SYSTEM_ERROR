@@ -1,3 +1,5 @@
+//throwing and catching std::system_error
+
 #include <system_error>
 #include <iostream>
 
