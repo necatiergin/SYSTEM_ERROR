@@ -1,3 +1,5 @@
+// throw - not throw overload
+
 #include <string>
 #include <system_error>
 
