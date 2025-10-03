@@ -8,3 +8,14 @@
 // std::make_error_code(MyErr) (veya std::make_error_condition(MyCond)) overload’ı.
 // std::is_error_code_enum<MyErr> (veya std::is_error_condition_enum<MyCond>) trait explicit specializaton.
 // (opsiyonel) error_category::default_error_condition ile code→condition eşlemesi.
+
+//kendi error enumaration türümüzü oluşturuyoruz:
+
+// 
+enum class MyErr {
+    Ok = 0,
+    NotInitialized = 1,
+    Timeout = 2,
+    BadInput = 3,
+    IoFailure = 4,
+};
