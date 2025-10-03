@@ -1,4 +1,4 @@
-// errmo to std::error_code conversion
+// errno to std::error_code conversion
 
 #include <system_error>
 #include <cerrno>
