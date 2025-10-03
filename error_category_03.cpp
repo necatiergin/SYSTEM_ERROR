@@ -6,9 +6,10 @@
 enum class file_errc {
     ok = 0, 
     open_failed = 1, 
-    read_failed = 2 };
+    read_failed = 2 
+};
 
-// 2) Kategori sınıfınız (singleton)
+// 2) singleton custom category class
 class file_category : public std::error_category {
 public:
     const char* name() const noexcept override 
@@ -51,7 +52,6 @@ inline std::error_code make_error_code(file_errc e)
 namespace std {
     template<> struct is_error_code_enum<file_errc> : true_type {};
 }
-
 
 int main()
 {
