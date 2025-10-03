@@ -56,4 +56,24 @@ public:
         default:                    return "unknown my_category error";
         }
     }
+
+
+// seçime bağlı error code'larını taşınabilir error_condtion değerlerine map ediyor
+    std::error_condition default_error_condition(int ev) const noexcept override 
+    {
+        // Example: classify a subset into generic conditions
+        using std::errc;
+        switch (static_cast<MyErr>(ev)) {
+        case MyErr::Timeout:   return std::make_error_condition(errc::timed_out);
+        case MyErr::BadInput:  return std::make_error_condition(errc::invalid_argument);
+        default:
+            return std::error_condition(ev, *this); // fall back to same category
+        }
+    }
 };
+
+// make_error_code fabrika fonksiyonu overload'u
+std::error_code make_error_code(MyErr e) noexcept 
+{
+    return { static_cast<int>(e), my_category() };
+}
