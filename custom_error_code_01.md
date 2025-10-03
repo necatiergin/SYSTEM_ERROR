@@ -100,6 +100,76 @@ int main()
 std::error_code ec = MyErr::Timeout;
 burada tam olarak ne oluyor
 
+sadece std::is_error_code_enum<ErrorCodeEnum> == true ise etkin ise 
+aşağıdaki template ctor devreye giriyor
+
+template<class ErrorCodeEnum>
+error_code(ErrorCodeEnum e) noexcept;      
+
+Bu ctor, ErrorCodeEnum için std::is_error_code_enum özelleştirmesi true olduğu durumda etkin (SFINAE). 
+MyErr için:
+
+namespace std {
+    template<> struct is_error_code_enum<MyErr> : true_type {};
+}
+
+yaptığın için, error_code(MyErr) kurucusu uygun hale gelir ve seçilir.
+
+Not: std::error_code’da “tek argümanlı int alan bir ctor” yoktur; mevcut doğrudan ctor:
+error_code(int value, const error_category& cat) noexcept
+Dolayısıyla MyErr → int dönüştürüp bunu çağırmak diye bir yol yok.
+
+Bu ctor içinde ne oluyor?
+Standart kütüphane bu ctor’u tipik olarak şöyle uygular (öz olarak):
+
+template<class ErrorCodeEnum>
+error_code::error_code(ErrorCodeEnum e) noexcept 
+{
+    *this = make_error_code(e);   // ADL ile doğru make_error_code bulunur
+}
+
+Yani kurucu, ADL (argument-dependent lookup) sayesinde senin tanımladığın:
+
+std::error_code make_error_code(MyErr e) noexcept;
+
+3) make_error_code(MyErr) ne döndürüyor?
+
+Senin yazdığın fabrika fonksiyonu tipik olarak şunu yapar:
+
+std::error_code make_error_code(MyErr e) noexcept {
+    return { static_cast<int>(e), my_category() };
+}
+
+Burada std::error_code’un (int, const error_category&) alan kurucusu çağrılır ve:
+
+value = static_cast<int>(MyErr::Timeout)
+
+category = my_category() (senin std::error_category türevin)
+
+ile bir geçici std::error_code oluşturulur; sonra o geçici, *this’e atanır.
+
+4) Kısa akış özeti
+
+Atama ifadesi std::error_code ec = MyErr::Timeout;
+
+Uygun kurucu: template<class E> error_code(E) noexcept (E = MyErr), çünkü is_error_code_enum<MyErr> == true.
+
+Kurucu içinde make_error_code(MyErr::Timeout) çağrılır (ADL).
+
+make_error_code → error_code(int, category) ile bir error_code döndürür.
+
+Bu değer ec’ye atanır.
+
+5) “Peki is_error_code_enum<MyErr> olmasaydı?”
+
+Şablon kurucu etkin olmazdı (SFINAE).
+
+Geriye uygun başka ctor kalmadığı için (tek argümanlı) kod derlenmezdi.
+
+Bu da özelleştirmenin (trait + make_error_code) neden zorunlu olduğunu gösterir.
+
+Özetle: O tek satır, std::error_code’un ErrorCodeEnum-ilişkili kurucusunu tetikliyor; 
+bu kurucu da ADL ile senin make_error_code(MyErr) fonksiyonunu bulup çağırıyor ve en sonunda (int, category) kurucusuna dayanarak error_code nesnesini inşa ediyor.
 */
 
 
