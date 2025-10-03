@@ -1,5 +1,5 @@
-//std::errc enumaratör türünden error_condition türüne dönüşüm
-
+// std::errc enumaratör türünden error_condition türüne dönüşüm
+// geri dönüş türü olan std::error_condition generic_category'ye ilişkindir.
 // std::error_condition make_error_condition(std::errc e) noexcept;
 
 #include <iostream>
