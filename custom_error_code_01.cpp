@@ -1,3 +1,4 @@
+<!---
 // Amaç: Kendi enum class hata sabitlerinizi, std::error_code/std::error_condition ekosistemine entegre etmek.
 // bunun için 2 ayrı yol olabilir
 // error_code yolu: “Somut hata kaynağı” (OS, kütüphane, modül) temsil edilir. Bir category (türetilmiş std::error_category) gerekir.
@@ -95,3 +96,11 @@ int main()
     }
 }
 
+/*
+std::error_code ec = MyErr::Timeout;
+burada tam olarak ne oluyor
+
+*/
+
+
+--->
