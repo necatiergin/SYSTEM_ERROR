@@ -19,3 +19,6 @@ enum class MyErr {
     BadInput = 3,
     IoFailure = 4,
 };
+
+// singleton category nesnesine erişim fonksiyon için bildirim yapıyoruz
+const std::error_category& my_category() noexcept;
