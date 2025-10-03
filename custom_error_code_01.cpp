@@ -11,6 +11,8 @@
 
 //kendi error enumaration türümüzü oluşturuyoruz:
 
+//başlık dosyamız
+// 
 // 
 enum class MyErr {
     Ok = 0,
@@ -30,3 +32,28 @@ std::error_code make_error_code(MyErr e) noexcept;
 namespace std {
     template<> struct is_error_code_enum<MyErr> : true_type {};
 }
+
+// implementasyon dosyamız : myerrors.cpp
+
+#include "my_errors.h"
+
+// kendi singleton error_category sınıfımızı implemente ediyoruz:
+
+class my_error_category : public std::error_category {
+public:
+    const char* name() const noexcept override {
+        return "my_category";
+    }
+
+    std::string message(int ev) const override {
+        // Never throw here, must be noexcept
+        switch (static_cast<MyErr>(ev)) {
+        case MyErr::Ok:             return "ok";
+        case MyErr::NotInitialized: return "not initialized";
+        case MyErr::Timeout:        return "timeout";
+        case MyErr::BadInput:       return "bad input";
+        case MyErr::IoFailure:      return "I/O failure";
+        default:                    return "unknown my_category error";
+        }
+    }
+};
