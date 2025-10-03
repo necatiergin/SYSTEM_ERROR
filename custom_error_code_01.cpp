@@ -77,3 +77,21 @@ std::error_code make_error_code(MyErr e) noexcept
 {
     return { static_cast<int>(e), my_category() };
 }
+
+// kullanım örneği
+// client.cpp
+
+#include <system_error>
+#include "myerrors.h"
+#include <iostream>
+
+int main() 
+{
+    std::error_code ec = MyErr::Timeout; 
+    std::cout << ec.message() << " | cat=" << ec.category().name() << '\n';
+
+    if (ec == std::errc::timed_out) {
+        std::cout << "timed outn";
+    }
+}
+
