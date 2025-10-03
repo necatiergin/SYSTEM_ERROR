@@ -22,3 +22,11 @@ enum class MyErr {
 
 // singleton category nesnesine erişim fonksiyon için bildirim yapıyoruz
 const std::error_category& my_category() noexcept;
+
+// enum türümüzden std::erroe_code türüne dönüştürecek olan make_error_code overload'u bildirimi
+std::error_code make_error_code(MyErr e) noexcept;
+
+// Myerr enum türü error_code amaçlı oluşturulan bir türdür. (SFINAE için gerekli)
+namespace std {
+    template<> struct is_error_code_enum<MyErr> : true_type {};
+}
